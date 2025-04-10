@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Only!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Parisienne&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;700&display=swap');
+        
+        :root {
+            --pink: #de458f;
+            --gold: #ffd700;
+            --text: #4a4a4a;
+            --heart: url('data:image/svg+xml,<svg viewBox="0 0 24 24" fill="%23ff1493"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+        }
+
+        body {
+            background: radial-gradient(circle at center, #fff0f5, #ffe4e1);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            font-family: 'ZCOOL XiaoWei', serif;
+            color: var(--text);
+        }
+
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--heart);
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            25% { transform: translate(100px, 50px) rotate(90deg); }
+            50% { transform: translate(50px, 100px) rotate(180deg); }
+            75% { transform: translate(-50px, 80px) rotate(270deg); }
+        }
+
+        .envelope {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255,105,180,0.2);
+            padding: 2rem;
+            margin: 2rem auto;
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 0 15%;
+            margin: 4rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--pink), var(--gold));
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .timeline-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 48%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            margin: 8rem 0;
+            z-index: 3;
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .timeline-item h3 {
+            font-family: 'Parisienne', cursive;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--pink);
+        }
+
+        .timeline-item p {
+            font-family: 'ZCOOL XiaoWei', serif;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 52%;
+            transform: translateX(-10%);
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 0;
+            transform: translateX(10%);
+        }
+
+        .timeline-item:nth-child(2),
+        .timeline-item:nth-child(4) {
+            left: 0;
+            transform: translateX(-30%) !important;
+        }
+
+        .floating-photo {
+            position: absolute;
+            width: 35%;
+            z-index: 2;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+            top: 50%;
+        }
+
+        .floating-photo.left {
+            left: -18%;
+            transform: translateY(-50%) rotate(-5deg);
+        }
+
+        .floating-photo.right {
+            right: -18%;
+            transform: translateY(-50%) rotate(5deg);
+        }
+
+        .timeline-item:nth-child(2) + .floating-photo.right,
+        .timeline-item:nth-child(4) + .floating-photo.right {
+            right: -38%;
+        }
+
+        .floating-photo img {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            border: 3px solid white;
+        }
+
+        .floating-photo::after {
+            content: attr(data-caption);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--pink);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'ZCOOL XiaoWei', serif;
+            font-size: 1.1rem;
+            white-space: nowrap;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(to var(--dir), var(--pink), transparent);
+            top: 50%;
+            z-index: 2;
+        }
+
+        .timeline-item:nth-child(odd)::after {
+            --dir: right;
+            right: calc(100% + 5px);
+        }
+
+        .timeline-item:nth-child(even)::after {
+            --dir: left;
+            left: calc(100% + 5px);
+        }
+
+        @media (max-width: 768px) {
+            .timeline {
+                padding: 0 5%;
+            }
+            
+            .timeline-item {
+                width: 90%!important;
+                margin: 4rem auto!important;
+                left: 0!important;
+                transform: none!important;
+            }
+            
+            .floating-photo {
+                position: static;
+                width: 80%!important;
+                margin: 2rem auto!important;
+                transform: none!important;
+            }
+            
+            .timeline-item::after {
+                display: none;
+            }
+        }
+
+        #showMessageBtn, #playMusicBtn {
+            background: var(--pink);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: fixed;
+            bottom: 30px;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(255,105,180,0.3);
+            font-family: 'ZCOOL XiaoWei', serif;
+        }
+
+        #showMessageBtn {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #playMusicBtn {
+            left: 70%;
+            transform: translateX(-50%);
+        }
+
+        .message {
+            position: fixed;
+            max-width: 300px;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-family: 'Parisienne', cursive;
+            font-size: 1.5rem;
+            line-height: 1.5;
+            color: var(--text);
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            z-index: 999;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <!-- 添加音频元素 -->
+    <audio id="backgroundMusic">
+        <source src="audio/music.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+
+    <div class="envelope">
+        <h1 style="font-family: 'Parisienne', cursive; font-size: 4rem; text-align: center;">
+            To 小帆!
+        </h1>
+
+        <div class="timeline">
+            <!-- 项目1 -->
+            <div class="timeline-item">
+                <h3>喔，好看！</h3>
+                <p>冒昧翻了你的朋友圈，不要打我嗷！</p>
+            </div>
+            <div class="floating-photo left" data-caption="1">
+                <img src="images/photo1.jpg" alt="时光温暖">
+            </div>
+
+            <!-- 项目2 -->
+            <div class="timeline-item">
+                <h3>挥汗的时刻是灵魂的救赎！</h3>
+                <p>（实在不好意思用原图，就处理了一下下。。。）</p>
+            </div>
+            <div class="floating-photo right" data-caption="2">
+                <img src="images/photo2.jpg" alt="挥汗的时刻是灵魂的救赎">
+            </div>
+
+            <!-- 项目3 -->
+            <div class="timeline-item">
+                <h3>潮流先锋！</h3>
+                <p>你的快乐就是美好，万般琳琅满目不急你的微笑</p>
+            </div>
+            <div class="floating-photo left" data-caption="3">
+                <img src="images/photo3.jpg" alt="最珍贵的应当是你">
+            </div>
+
+            <!-- 项目4 -->
+            <div class="timeline-item">
+                <h3>氛围女神！</h3>
+                <p>刀刃向内，自律是人间清醒</p>
+            </div>
+            <div class="floating-photo right" data-caption="4">
+                <img src="images/photo4.jpg" alt="刀刃向内">
+            </div>
+
+            <!-- 项目5 -->
+            <div class="timeline-item">
+                <h3>高冷王者！</h3>
+                <p>烟蒂燃尽，燃不尽抗争与不屈的态度</p>
+            </div>
+            <div class="floating-photo left" data-caption="5">
+                <img src="images/photo5.jpg" alt="烟蒂燃尽，燃不尽抗争不屈的态度">
+            </div>
+        </div>
+    </div>
+
+    <button id="showMessageBtn"> 点一下，再点一下！ </button>
+    <!-- 添加播放音乐的按钮 -->
+    <button id="playMusicBtn"> 播放music！ </button>
+
+    <script>
+        // 粒子背景初始化
+        const particleContainer = document.getElementById('particles');
+        for(let i=0; i<50; i++){
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.cssText = `
+                width: ${20 + Math.random()*30}px;
+                height: ${20 + Math.random()*30}px;
+                left: ${Math.random()*100}%;
+                top: ${Math.random()*100}%;
+                animation-duration: ${10 + Math.random()*20}s;
+                opacity: ${0.2 + Math.random()*0.5};
+            `;
+            particleContainer.appendChild(p);
+        }
+
+        // 动态消息系统
+        const messages = [
+            "在星辰大海中，你是最亮的那颗星",
+            "你的微笑是我每天的阳光",
+            "与你相遇是生命最美的奇迹",
+            "愿执子之手，与子偕老",
+            "可以打开信封啦，祝展信佳"
+        ];
+
+        let messageIndex = 0;
+
+        document.getElementById('showMessageBtn').addEventListener('click', function() {
+            if (messageIndex >= messages.length) {
+                messageIndex = 0;
+                return;
+            }
+
+            const msg = document.createElement('div');
+            msg.className = 'message';
+            msg.textContent = messages[messageIndex];
+            
+            msg.style.top = `${10 + Math.random()*80}%`;
+            msg.style.left = `${10 + Math.random()*80}%`;
+            
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 1000);
+            }, 2000);
+
+            messageIndex++;
+        });
+
+        // 播放音乐功能
+        const audio = document.getElementById('backgroundMusic');
+        document.getElementById('playMusicBtn').addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+                this.textContent = '暂停music！';
+            } else {
+                audio.pause();
+                this.textContent = '继续播放music！';
+            }
+        });
+
+        // 自动布局调整
+        function adjustLayout() {
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                const photo = item.nextElementSibling;
+                if(photo && photo.classList.contains('floating-photo')) {
+                    const itemTop = item.offsetTop;
+                    const itemHeight = item.offsetHeight;
+                    photo.style.top = `${itemTop + itemHeight/2}px`;
+                }
+            });
+        }
+
+        window.addEventListener('resize', adjustLayout);
+        window.addEventListener('load', adjustLayout);
+    </script>
+</body>
+</html>
